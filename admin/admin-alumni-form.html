@@ -23,21 +23,21 @@
             </span>
         </div>
         <nav class="sidebar-nav">
-            <a href="admin-dashboard.html" class="sidebar-link">
+            <a href="../admin/admin-dashboard.html" class="sidebar-link">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4v9H3zM10 3h4v18h-4zM17 8h4v13h-4z" stroke-linecap="round"/></svg>
                 Dashboard
             </a>
-            <a href="admin-alumni.html" class="sidebar-link sidebar-link--active">
+            <a href="../admin/admin-alumni.html" class="sidebar-link sidebar-link--active">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" stroke-linecap="round"/></svg>
                 Data Alumni
             </a>
         </nav>
         <div class="sidebar-bottom">
-            <a href="index.html" class="sidebar-link">
+            <a href=".../index.html" class="sidebar-link">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" stroke-linecap="round"/></svg>
                 Kembali ke Situs
             </a>
-            <a href="login.html" class="sidebar-link">
+            <a href=".../login/login.html" class="sidebar-link">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round"/></svg>
                 Keluar
             </a>
@@ -63,7 +63,7 @@
 
             <!-- Breadcrumb -->
             <nav class="breadcrumb">
-                <a href="admin-alumni.html" class="breadcrumb-link">Data Alumni</a>
+                <a href="../admin/admin-alumni.html" class="breadcrumb-link">Data Alumni</a>
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6" stroke-linecap="round"/></svg>
                 <span class="breadcrumb-current" id="breadcrumb-current">Tambah Baru</span>
             </nav>
@@ -182,7 +182,7 @@
                                 <button type="button" id="btn-hapus" class="btn-delete-form" onclick="hapusFromForm()">Hapus Alumni</button>
                             </div>
                             <div class="form-actions-right">
-                                <a href="admin-alumni.html" class="btn-batal">Batal</a>
+                                <a href="../admin/admin-alumni.html" class="btn-batal">Batal</a>
                                 <button type="submit" id="btn-simpan" class="btn-simpan">Simpan Alumni</button>
                             </div>
                         </div>
@@ -263,7 +263,7 @@
             const nama = document.getElementById('nama').value;
             if (confirm(`Yakin hapus alumni "${nama}"? Tindakan ini tidak bisa dibatalkan.`)) {
                 const msg = encodeURIComponent(`Alumni "${nama}" berhasil dihapus.`);
-                window.location.href = `admin-alumni.html?success=${msg}`;
+                window.location.href = `.../admin/admin-alumni.html?success=${msg}`;
             }
         }
 
