@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Tambah Alumni - SIAPEL Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon logo-icon--sm">S</div>
+            <span class="sidebar-logo-text">
+                <span class="sidebar-logo-name">SIAPEL</span>
+                <span class="sidebar-logo-sub">Admin Panel</span>
+            </span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="admin-dashboard.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4v9H3zM10 3h4v18h-4zM17 8h4v13h-4z" stroke-linecap="round"/></svg>
+                Dashboard
+            </a>
+            <a href="admin-alumni.html" class="sidebar-link sidebar-link--active">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" stroke-linecap="round"/></svg>
+                Data Alumni
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <a href="index.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" stroke-linecap="round"/></svg>
+                Kembali ke Situs
+            </a>
+            <a href="login.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round"/></svg>
+                Keluar
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="hamburger-admin" onclick="toggleSidebar()">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+                </button>
+                <h1 class="admin-page-title" id="topbar-title">Tambah Alumni</h1>
+            </div>
+            <div class="topbar-right">
+                <span class="topbar-username">Administrator</span>
+                <span class="topbar-avatar">A</span>
+            </div>
+        </header>
+
+        <main class="admin-content">
+
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="admin-alumni.html" class="breadcrumb-link">Data Alumni</a>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6" stroke-linecap="round"/></svg>
+                <span class="breadcrumb-current" id="breadcrumb-current">Tambah Baru</span>
+            </nav>
+
+            <div class="form-page-wrap">
+                <div class="admin-card">
+
+                    <!-- Edit mode header -->
+                    <div class="edit-header" id="edit-header" hidden>
+                        <span class="edit-avatar" id="edit-avatar">A</span>
+                        <div>
+                            <h2 class="edit-name" id="edit-name"></h2>
+                            <p class="edit-nip" id="edit-nip"></p>
+                        </div>
+                    </div>
+
+                    <!-- Tambah mode header -->
+                    <div id="tambah-header">
+                        <h2 class="form-title">Tambah Data Alumni</h2>
+                        <p class="form-subtitle">Isi semua data alumni yang ingin ditambahkan.</p>
+                    </div>
+
+                    <!-- Error alert -->
+                    <div class="alert alert--error" id="form-error" hidden>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z" stroke-linecap="round"/></svg>
+                        <div>
+                            <p class="font-semibold" style="margin-bottom:.25rem;">Terdapat kesalahan:</p>
+                            <ul id="error-list" style="margin:0;padding-left:1rem;"></ul>
+                        </div>
+                    </div>
+
+                    <form id="alumni-form" class="alumni-form" onsubmit="submitForm(event)" novalidate>
+
+                        <!-- NIP & Nama -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="nip" class="form-label">NIP <span class="required">*</span></label>
+                                <input id="nip" type="text" name="nip" placeholder="cth. 198203152006041002" class="form-input" required pattern="\d{18}" title="NIP harus 18 digit angka">
+                                <p class="field-hint">18 digit angka</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="nama" class="form-label">Nama Lengkap <span class="required">*</span></label>
+                                <input id="nama" type="text" name="nama" placeholder="Nama lengkap alumni" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <!-- Jabatan & Pelatihan -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="jabatan" class="form-label">Jabatan</label>
+                                <input id="jabatan" type="text" name="jabatan" placeholder="Jabatan saat ini" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="pelatihan" class="form-label">Pelatihan</label>
+                                <input id="pelatihan" type="text" name="pelatihan" placeholder="Nama pelatihan" class="form-input">
+                            </div>
+                        </div>
+
+                        <!-- Unit Kerja & Provinsi -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="unit_kerja_id" class="form-label">Unit Kerja</label>
+                                <select id="unit_kerja_id" name="unit_kerja_id" class="form-input form-select">
+                                    <option value="">— Pilih Unit Kerja —</option>
+                                    <option value="1">BKN Pusat</option>
+                                    <option value="2">Kemendagri</option>
+                                    <option value="3">Kemenkeu</option>
+                                    <option value="4">Kemenkes</option>
+                                    <option value="5">BPS Nasional</option>
+                                    <option value="6">Kemenpan RB</option>
+                                    <option value="7">BPKP</option>
+                                    <option value="8">Kementan</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="provinsi_id" class="form-label">Provinsi</label>
+                                <select id="provinsi_id" name="provinsi_id" class="form-input form-select">
+                                    <option value="">— Pilih Provinsi —</option>
+                                    <option value="1">DKI Jakarta</option>
+                                    <option value="2">Jawa Barat</option>
+                                    <option value="3">Jawa Tengah</option>
+                                    <option value="4">Jawa Timur</option>
+                                    <option value="5">Sumatera Utara</option>
+                                    <option value="6">Bali</option>
+                                    <option value="7">Sulawesi Selatan</option>
+                                    <option value="8">Kalimantan Timur</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- PKP & PKA -->
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="ketpkp" class="form-label">Keterangan PKP</label>
+                                <select id="ketpkp" name="ketpkp" class="form-input form-select">
+                                    <option value="">— Pilih —</option>
+                                    <option value="Lulus">Lulus</option>
+                                    <option value="Tidak Lulus">Tidak Lulus</option>
+                                    <option value="Belum">Belum</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ketpka" class="form-label">Keterangan PKA</label>
+                                <select id="ketpka" name="ketpka" class="form-input form-select">
+                                    <option value="">— Pilih —</option>
+                                    <option value="Lulus">Lulus</option>
+                                    <option value="Tidak Lulus">Tidak Lulus</option>
+                                    <option value="Belum">Belum</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Tombol -->
+                        <div class="form-actions" id="form-actions">
+                            <div id="delete-btn-wrap" hidden>
+                                <button type="button" id="btn-hapus" class="btn-delete-form" onclick="hapusFromForm()">Hapus Alumni</button>
+                            </div>
+                            <div class="form-actions-right">
+                                <a href="admin-alumni.html" class="btn-batal">Batal</a>
+                                <button type="submit" id="btn-simpan" class="btn-simpan">Simpan Alumni</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ======= DATA DUMMY =======
+        const dummyAlumni = {
+            1: { nip:'198203152006041002', nama:'Ridwan Kamil Prasetyo', jabatan:'Kepala Bidang', pelatihan:'PKP Angkatan I', unit_kerja_id:'1', provinsi_id:'1', ketpkp:'Lulus', ketpka:'Lulus' },
+            2: { nip:'197908252004012003', nama:'Siti Rahayu Wulandari', jabatan:'Kepala Sub Bagian', pelatihan:'PKP Angkatan II', unit_kerja_id:'2', provinsi_id:'2', ketpkp:'Lulus', ketpka:'Tidak Lulus' },
+            3: { nip:'198506102009031005', nama:'Ahmad Fauzi Hakim', jabatan:'Analis Kebijakan', pelatihan:'PKA Angkatan I', unit_kerja_id:'3', provinsi_id:'3', ketpkp:'Lulus', ketpka:'' },
+            4: { nip:'198712052010012001', nama:'Dewi Lestari Safitri', jabatan:'Kepala Seksi', pelatihan:'', unit_kerja_id:'4', provinsi_id:'4', ketpkp:'Belum', ketpka:'Belum' },
+            5: { nip:'198001302003121004', nama:'Budi Santoso Permadi', jabatan:'Kepala Bidang', pelatihan:'PKA Angkatan III', unit_kerja_id:'5', provinsi_id:'5', ketpkp:'Lulus', ketpka:'Lulus' },
+        };
+
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get('mode');
+        const id = parseInt(params.get('id'));
+        const isEdit = mode === 'edit' && id;
+
+        if (isEdit) {
+            document.getElementById('page-title').textContent = 'Edit Alumni - SIAPEL Admin';
+            document.getElementById('topbar-title').textContent = 'Edit Alumni';
+            document.getElementById('breadcrumb-current').textContent = 'Edit';
+            document.getElementById('tambah-header').hidden = true;
+            document.getElementById('btn-simpan').textContent = 'Simpan Perubahan';
+            document.getElementById('delete-btn-wrap').hidden = false;
+
+            const data = dummyAlumni[id];
+            if (data) {
+                document.getElementById('edit-header').hidden = false;
+                document.getElementById('edit-avatar').textContent = data.nama[0].toUpperCase();
+                document.getElementById('edit-name').textContent = data.nama;
+                document.getElementById('edit-nip').textContent = data.nip;
+
+                document.getElementById('nip').value = data.nip;
+                document.getElementById('nama').value = data.nama;
+                document.getElementById('jabatan').value = data.jabatan;
+                document.getElementById('pelatihan').value = data.pelatihan;
+                document.getElementById('unit_kerja_id').value = data.unit_kerja_id;
+                document.getElementById('provinsi_id').value = data.provinsi_id;
+                document.getElementById('ketpkp').value = data.ketpkp;
+                document.getElementById('ketpka').value = data.ketpka;
+            }
+        }
+
+        function submitForm(e) {
+            e.preventDefault();
+            const errors = [];
+            const nip = document.getElementById('nip').value.trim();
+            const nama = document.getElementById('nama').value.trim();
+
+            if (!nip) errors.push('NIP wajib diisi.');
+            else if (!/^\d{18}$/.test(nip)) errors.push('NIP harus 18 digit angka.');
+            if (!nama) errors.push('Nama lengkap wajib diisi.');
+
+            if (errors.length > 0) {
+                const errEl = document.getElementById('form-error');
+                document.getElementById('error-list').innerHTML = errors.map(e => `<li>${e}</li>`).join('');
+                errEl.hidden = false;
+                errEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            document.getElementById('form-error').hidden = true;
+            const msg = isEdit
+                ? encodeURIComponent(`Data alumni "${nama}" berhasil diperbarui.`)
+                : encodeURIComponent(`Alumni "${nama}" berhasil ditambahkan.`);
+            window.location.href = `admin-alumni.html?success=${msg}`;
+        }
+
+        function hapusFromForm() {
+            const nama = document.getElementById('nama').value;
+            if (confirm(`Yakin hapus alumni "${nama}"? Tindakan ini tidak bisa dibatalkan.`)) {
+                const msg = encodeURIComponent(`Alumni "${nama}" berhasil dihapus.`);
+                window.location.href = `admin-alumni.html?success=${msg}`;
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('sidebar--open');
+            document.getElementById('sidebar-overlay').classList.toggle('overlay--visible');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('sidebar--open');
+            document.getElementById('sidebar-overlay').classList.remove('overlay--visible');
+        }
+    </script>
+</body>
+</html>

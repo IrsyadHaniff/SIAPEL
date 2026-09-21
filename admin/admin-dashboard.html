@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SIAPEL Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+
+    <!-- Overlay mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Logo -->
+        <div class="sidebar-logo">
+            <div class="logo-icon logo-icon--sm">S</div>
+            <span class="sidebar-logo-text">
+                <span class="sidebar-logo-name">SIAPEL</span>
+                <span class="sidebar-logo-sub">Admin Panel</span>
+            </span>
+        </div>
+
+        <!-- Menu -->
+        <nav class="sidebar-nav">
+            <a href="admin-dashboard.html" class="sidebar-link sidebar-link--active">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4v9H3zM10 3h4v18h-4zM17 8h4v13h-4z" stroke-linecap="round"/></svg>
+                Dashboard
+            </a>
+            <a href="admin-alumni.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" stroke-linecap="round"/></svg>
+                Data Alumni
+            </a>
+        </nav>
+
+        <!-- Bottom -->
+        <div class="sidebar-bottom">
+            <a href="index.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" stroke-linecap="round"/></svg>
+                Kembali ke Situs
+            </a>
+            <a href="login.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round"/></svg>
+                Keluar
+            </a>
+        </div>
+    </aside>
+
+    <!-- ============ MAIN ============ -->
+    <div class="admin-main">
+
+        <!-- Topbar -->
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="hamburger-admin" onclick="toggleSidebar()" aria-label="Toggle menu">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+                </button>
+                <h1 class="admin-page-title">Dashboard</h1>
+            </div>
+            <div class="topbar-right">
+                <span class="topbar-username">Administrator</span>
+                <span class="topbar-avatar">A</span>
+            </div>
+        </header>
+
+        <!-- Flash success message -->
+        <div class="flash flash--success" id="flash-success" hidden>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"/></svg>
+            <span id="flash-msg"></span>
+            <button onclick="document.getElementById('flash-success').hidden=true" class="flash-close">&times;</button>
+        </div>
+
+        <!-- Content -->
+        <main class="admin-content">
+
+            <!-- Statistik -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-inner">
+                        <span class="stat-card-icon stat-card-icon--yellow">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" stroke-linecap="round"/></svg>
+                        </span>
+                        <div>
+                            <p class="stat-card-label">Total Alumni</p>
+                            <p class="stat-card-value">1.247</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-inner">
+                        <span class="stat-card-icon stat-card-icon--blue">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6" stroke-linecap="round"/></svg>
+                        </span>
+                        <div>
+                            <p class="stat-card-label">Unit Kerja</p>
+                            <p class="stat-card-value">34</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-inner">
+                        <span class="stat-card-icon stat-card-icon--gray">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z" stroke-linecap="round"/><circle cx="12" cy="9.5" r="2.2"/></svg>
+                        </span>
+                        <div>
+                            <p class="stat-card-label">Provinsi</p>
+                            <p class="stat-card-value">34</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabel alumni terbaru -->
+            <div class="admin-card mt-6">
+                <div class="admin-card-header">
+                    <h2 class="admin-card-title">Alumni Terbaru</h2>
+                    <a href="admin-alumni-form.html" class="btn-add">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+                        Tambah Alumni
+                    </a>
+                </div>
+
+                <div class="tabel-scroll">
+                    <table class="tabel tabel--admin">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>NIP</th>
+                                <th>Unit Kerja</th>
+                                <th>Provinsi</th>
+                                <th class="text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-medium">Ridwan Kamil Prasetyo</td>
+                                <td class="mono text-muted">198203152006041002</td>
+                                <td class="text-muted">BKN Pusat</td>
+                                <td class="text-muted">DKI Jakarta</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="admin-alumni-form.html?mode=edit&id=1" class="btn-edit-sm">Edit</a>
+                                        <button onclick="hapusAlumni('Ridwan Kamil Prasetyo')" class="btn-delete-sm">Hapus</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium">Siti Rahayu Wulandari</td>
+                                <td class="mono text-muted">197908252004012003</td>
+                                <td class="text-muted">Kemendagri</td>
+                                <td class="text-muted">Jawa Barat</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="admin-alumni-form.html?mode=edit&id=2" class="btn-edit-sm">Edit</a>
+                                        <button onclick="hapusAlumni('Siti Rahayu Wulandari')" class="btn-delete-sm">Hapus</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium">Ahmad Fauzi Hakim</td>
+                                <td class="mono text-muted">198506102009031005</td>
+                                <td class="text-muted">Kemenkeu</td>
+                                <td class="text-muted">Jawa Tengah</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="admin-alumni-form.html?mode=edit&id=3" class="btn-edit-sm">Edit</a>
+                                        <button onclick="hapusAlumni('Ahmad Fauzi Hakim')" class="btn-delete-sm">Hapus</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium">Dewi Lestari Safitri</td>
+                                <td class="mono text-muted">198712052010012001</td>
+                                <td class="text-muted">Kemenkes</td>
+                                <td class="text-muted">Jawa Timur</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="admin-alumni-form.html?mode=edit&id=4" class="btn-edit-sm">Edit</a>
+                                        <button onclick="hapusAlumni('Dewi Lestari Safitri')" class="btn-delete-sm">Hapus</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-medium">Budi Santoso Permadi</td>
+                                <td class="mono text-muted">198001302003121004</td>
+                                <td class="text-muted">BPS Nasional</td>
+                                <td class="text-muted">Sumatera Utara</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <a href="admin-alumni-form.html?mode=edit&id=5" class="btn-edit-sm">Edit</a>
+                                        <button onclick="hapusAlumni('Budi Santoso Permadi')" class="btn-delete-sm">Hapus</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="admin-card-footer">
+                    <a href="admin-alumni.html" class="link-semua">Lihat semua alumni →</a>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            sidebar.classList.toggle('sidebar--open');
+            overlay.classList.toggle('overlay--visible');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('sidebar--open');
+            document.getElementById('sidebar-overlay').classList.remove('overlay--visible');
+        }
+        function hapusAlumni(nama) {
+            if (confirm(`Yakin hapus alumni "${nama}"?`)) {
+                const flash = document.getElementById('flash-success');
+                document.getElementById('flash-msg').textContent = `Alumni "${nama}" berhasil dihapus.`;
+                flash.hidden = false;
+                setTimeout(() => flash.hidden = true, 4000);
+            }
+        }
+
+        // Cek flash dari halaman form
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success')) {
+            const flash = document.getElementById('flash-success');
+            document.getElementById('flash-msg').textContent = decodeURIComponent(urlParams.get('success'));
+            flash.hidden = false;
+            setTimeout(() => flash.hidden = true, 4000);
+        }
+    </script>
+</body>
+</html>

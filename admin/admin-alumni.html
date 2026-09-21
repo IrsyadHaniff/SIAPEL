@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Alumni - SIAPEL Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon logo-icon--sm">S</div>
+            <span class="sidebar-logo-text">
+                <span class="sidebar-logo-name">SIAPEL</span>
+                <span class="sidebar-logo-sub">Admin Panel</span>
+            </span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="admin-dashboard.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4v9H3zM10 3h4v18h-4zM17 8h4v13h-4z" stroke-linecap="round"/></svg>
+                Dashboard
+            </a>
+            <a href="admin-alumni.html" class="sidebar-link sidebar-link--active">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" stroke-linecap="round"/></svg>
+                Data Alumni
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <a href="index.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" stroke-linecap="round"/></svg>
+                Kembali ke Situs
+            </a>
+            <a href="login.html" class="sidebar-link">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round"/></svg>
+                Keluar
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="admin-main">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <button type="button" class="hamburger-admin" onclick="toggleSidebar()" aria-label="Toggle menu">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+                </button>
+                <h1 class="admin-page-title">Data Alumni</h1>
+            </div>
+            <div class="topbar-right">
+                <span class="topbar-username">Administrator</span>
+                <span class="topbar-avatar">A</span>
+            </div>
+        </header>
+
+        <div class="flash flash--success" id="flash-success" hidden>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round"/></svg>
+            <span id="flash-msg"></span>
+            <button onclick="document.getElementById('flash-success').hidden=true" class="flash-close">&times;</button>
+        </div>
+
+        <main class="admin-content">
+
+            <!-- Header + Tambah -->
+            <div class="alumni-page-header">
+                <div>
+                    <p class="alumni-total-text">Total <span id="total-count" class="font-bold">10</span> alumni ditemukan</p>
+                </div>
+                <a href="admin-alumni-form.html" id="btn-tambah-alumni" class="btn-add">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+                    Tambah Alumni
+                </a>
+            </div>
+
+            <!-- Filter & Search -->
+            <div class="admin-card mb-5">
+                <form class="filter-form" id="filter-form" onsubmit="filterAlumni(event)">
+                    <div class="filter-field filter-field--wide">
+                        <label for="filter-q" class="field-label">Cari Nama / NIP</label>
+                        <div class="input-icon-wrap">
+                            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg>
+                            <input id="filter-q" type="text" name="q" placeholder="Nama atau NIP..." class="form-input form-input--icon" oninput="filterAlumniLive()">
+                        </div>
+                    </div>
+
+                    <div class="filter-field">
+                        <label for="filter-unit" class="field-label">Unit Kerja</label>
+                        <select id="filter-unit" name="unit_kerja_id" class="form-input form-select" onchange="filterAlumniLive()">
+                            <option value="">Semua Unit</option>
+                            <option value="1">BKN Pusat</option>
+                            <option value="2">Kemendagri</option>
+                            <option value="3">Kemenkeu</option>
+                            <option value="4">Kemenkes</option>
+                            <option value="5">BPS Nasional</option>
+                            <option value="6">Kemenpan RB</option>
+                            <option value="7">BPKP</option>
+                            <option value="8">Kementan</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-field">
+                        <label for="filter-provinsi" class="field-label">Provinsi</label>
+                        <select id="filter-provinsi" name="provinsi_id" class="form-input form-select" onchange="filterAlumniLive()">
+                            <option value="">Semua Provinsi</option>
+                            <option value="1">DKI Jakarta</option>
+                            <option value="2">Jawa Barat</option>
+                            <option value="3">Jawa Tengah</option>
+                            <option value="4">Jawa Timur</option>
+                            <option value="5">Sumatera Utara</option>
+                            <option value="6">Bali</option>
+                            <option value="7">Sulawesi Selatan</option>
+                            <option value="8">Kalimantan Timur</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-actions">
+                        <button type="submit" class="btn-filter">Filter</button>
+                        <button type="button" class="btn-reset-filter" onclick="resetFilter()">Reset</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabel -->
+            <div class="admin-card">
+                <div class="tabel-scroll">
+                    <table class="tabel tabel--admin" id="alumni-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama</th>
+                                <th>NIP</th>
+                                <th>Jabatan</th>
+                                <th>Unit Kerja</th>
+                                <th>Provinsi</th>
+                                <th>PKP</th>
+                                <th>PKA</th>
+                                <th class="text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="alumni-tbody">
+                            <!-- Dirender oleh JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="pagination" id="pagination"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // ======= DATA DUMMY =======
+        const allAlumni = [
+            { id:1, nama:'Ridwan Kamil Prasetyo', nip:'198203152006041002', jabatan:'Kepala Bidang', unit:'BKN Pusat', provinsi:'DKI Jakarta', pkp:'Lulus', pka:'Lulus' },
+            { id:2, nama:'Siti Rahayu Wulandari', nip:'197908252004012003', jabatan:'Kepala Sub Bagian', unit:'Kemendagri', provinsi:'Jawa Barat', pkp:'Lulus', pka:'Tidak Lulus' },
+            { id:3, nama:'Ahmad Fauzi Hakim', nip:'198506102009031005', jabatan:'Analis Kebijakan', unit:'Kemenkeu', provinsi:'Jawa Tengah', pkp:'Lulus', pka:'-' },
+            { id:4, nama:'Dewi Lestari Safitri', nip:'198712052010012001', jabatan:'Kepala Seksi', unit:'Kemenkes', provinsi:'Jawa Timur', pkp:'Belum', pka:'Belum' },
+            { id:5, nama:'Budi Santoso Permadi', nip:'198001302003121004', jabatan:'Kepala Bidang', unit:'BPS Nasional', provinsi:'Sumatera Utara', pkp:'Lulus', pka:'Lulus' },
+            { id:6, nama:'Rina Fitriani Putri', nip:'199003201912012002', jabatan:'Perencana', unit:'Kemenpan RB', provinsi:'Bali', pkp:'Tidak Lulus', pka:'-' },
+            { id:7, nama:'Hendra Kurniawan', nip:'197805142001121003', jabatan:'Auditor', unit:'BPKP', provinsi:'Sulawesi Selatan', pkp:'Lulus', pka:'Lulus' },
+            { id:8, nama:'Yulia Permatasari', nip:'198904162012012004', jabatan:'Kasubbid', unit:'Kementan', provinsi:'Kalimantan Timur', pkp:'Lulus', pka:'Belum' },
+            { id:9, nama:'Teguh Widodo Santoso', nip:'197612252000031002', jabatan:'Kepala Bagian', unit:'BKN Pusat', provinsi:'DKI Jakarta', pkp:'Lulus', pka:'Lulus' },
+            { id:10, nama:'Maria Kristiani', nip:'199105122014012001', jabatan:'Analis SDM', unit:'Kemendagri', provinsi:'Jawa Barat', pkp:'Belum', pka:'-' },
+        ];
+
+        let currentPage = 1;
+        const perPage = 5;
+        let filteredData = [...allAlumni];
+
+        function renderTable() {
+            const tbody = document.getElementById('alumni-tbody');
+            const start = (currentPage - 1) * perPage;
+            const slice = filteredData.slice(start, start + perPage);
+
+            if (slice.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:4rem 1rem;">
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;">
+                        <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="#0F0F0F" stroke-width="1.5" opacity=".15"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c0-4.1 3.4-7.5 7.5-7.5s7.5 3.4 7.5 7.5" stroke-linecap="round"/></svg>
+                        <p style="color:#0F0F0F66;font-size:.875rem;">Tidak ada data alumni</p>
+                    </div></td></tr>`;
+            } else {
+                tbody.innerHTML = slice.map((a, i) => `
+                    <tr class="tabel-row-hover" data-id="${a.id}">
+                        <td class="text-muted text-xs">${start + i + 1}</td>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:.75rem;">
+                                <span class="avatar-initial">${a.nama[0].toUpperCase()}</span>
+                                <span class="font-medium">${a.nama}</span>
+                            </div>
+                        </td>
+                        <td class="mono text-muted text-xs">${a.nip}</td>
+                        <td class="text-muted">${a.jabatan || '-'}</td>
+                        <td class="text-muted">${a.unit || '-'}</td>
+                        <td class="text-muted">${a.provinsi || '-'}</td>
+                        <td>${badgePKP(a.pkp)}</td>
+                        <td>${badgePKA(a.pka)}</td>
+                        <td>
+                            <div class="action-buttons action-buttons--right">
+                                <a href="admin-alumni-form.html?mode=edit&id=${a.id}" class="btn-edit-sm-outline">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke-linecap="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke-linecap="round"/></svg>
+                                    Edit
+                                </a>
+                                <button onclick="hapusAlumni(${a.id},'${a.nama.replace(/'/g, "\\'")}')" class="btn-delete-sm-outline">
+                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6" stroke-linecap="round"/><path d="M9 6V4h6v2" stroke-linecap="round"/></svg>
+                                    Hapus
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            document.getElementById('total-count').textContent = filteredData.length;
+            renderPagination();
+        }
+
+        function badgePKP(val) {
+            if (!val || val === '-') return '<span class="text-muted">-</span>';
+            const cls = val === 'Lulus' ? 'badge badge--green' : val === 'Tidak Lulus' ? 'badge badge--red' : 'badge badge--gray';
+            return `<span class="${cls}">${val}</span>`;
+        }
+        function badgePKA(val) { return badgePKP(val); }
+
+        function renderPagination() {
+            const total = Math.ceil(filteredData.length / perPage);
+            const pag = document.getElementById('pagination');
+            if (total <= 1) { pag.innerHTML = ''; return; }
+            let html = '';
+            for (let i = 1; i <= total; i++) {
+                html += `<button onclick="goPage(${i})" class="pag-btn ${i === currentPage ? 'pag-btn--active' : ''}">${i}</button>`;
+            }
+            pag.innerHTML = html;
+        }
+
+        function goPage(p) { currentPage = p; renderTable(); }
+
+        function filterAlumniLive() {
+            const q = document.getElementById('filter-q').value.toLowerCase();
+            const unitId = document.getElementById('filter-unit').value;
+            const provId = document.getElementById('filter-provinsi').value;
+
+            const unitMap = {'1':'BKN Pusat','2':'Kemendagri','3':'Kemenkeu','4':'Kemenkes','5':'BPS Nasional','6':'Kemenpan RB','7':'BPKP','8':'Kementan'};
+            const provMap = {'1':'DKI Jakarta','2':'Jawa Barat','3':'Jawa Tengah','4':'Jawa Timur','5':'Sumatera Utara','6':'Bali','7':'Sulawesi Selatan','8':'Kalimantan Timur'};
+
+            filteredData = allAlumni.filter(a => {
+                const matchQ = !q || a.nama.toLowerCase().includes(q) || a.nip.includes(q);
+                const matchUnit = !unitId || a.unit === unitMap[unitId];
+                const matchProv = !provId || a.provinsi === provMap[provId];
+                return matchQ && matchUnit && matchProv;
+            });
+            currentPage = 1;
+            renderTable();
+        }
+
+        function filterAlumni(e) { e.preventDefault(); filterAlumniLive(); }
+
+        function resetFilter() {
+            document.getElementById('filter-q').value = '';
+            document.getElementById('filter-unit').value = '';
+            document.getElementById('filter-provinsi').value = '';
+            filteredData = [...allAlumni];
+            currentPage = 1;
+            renderTable();
+        }
+
+        function hapusAlumni(id, nama) {
+            if (confirm(`Yakin hapus alumni "${nama}"?`)) {
+                const idx = allAlumni.findIndex(a => a.id === id);
+                if (idx > -1) allAlumni.splice(idx, 1);
+                filterAlumniLive();
+                const flash = document.getElementById('flash-success');
+                document.getElementById('flash-msg').textContent = `Alumni "${nama}" berhasil dihapus.`;
+                flash.hidden = false;
+                setTimeout(() => flash.hidden = true, 4000);
+            }
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('sidebar--open');
+            document.getElementById('sidebar-overlay').classList.toggle('overlay--visible');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('sidebar--open');
+            document.getElementById('sidebar-overlay').classList.remove('overlay--visible');
+        }
+
+        // Cek flash dari form
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success')) {
+            document.getElementById('flash-msg').textContent = decodeURIComponent(urlParams.get('success'));
+            document.getElementById('flash-success').hidden = false;
+            setTimeout(() => document.getElementById('flash-success').hidden = true, 4000);
+        }
+
+        renderTable();
+    </script>
+</body>
+</html>
