@@ -1,83 +1,132 @@
 /* ================================================================
-   SIAPEL – app.js 
+   SIAPEL – app.js  (halaman publik – index.html)
    ================================================================ */
 
-// ── DATA DUMMY ────────────────────────────────────────────────────
-const UNIT_KERJA = [
-  { id: 1, nama_unit: "bpsdm" },
-];
-
-const PROVINSI = [
-  { id: 1, nama_provinsi: "Aceh" },
-  { id: 2, nama_provinsi: "Sumatera Utara" },
-  { id: 3, nama_provinsi: "Sumatera Barat" },
-  { id: 4, nama_provinsi: "Riau" },
-  { id: 5, nama_provinsi: "Kepulauan Riau" },
-  { id: 6, nama_provinsi: "Jambi" },
-  { id: 7, nama_provinsi: "Sumatera Selatan" },
-  { id: 8, nama_provinsi: "Bengkulu" },
-  { id: 9, nama_provinsi: "Lampung" },
-  { id: 10, nama_provinsi: "Bangka Belitung" },
-  { id: 11, nama_provinsi: "DKI Jakarta" },
-  { id: 12, nama_provinsi: "Jawa Barat" },
-  { id: 13, nama_provinsi: "Jawa Tengah" },
-  { id: 14, nama_provinsi: "DI Yogyakarta" },
-  { id: 15, nama_provinsi: "Jawa Timur" },
-  { id: 16, nama_provinsi: "Banten" },
-  { id: 17, nama_provinsi: "Bali" },
-  { id: 18, nama_provinsi: "NTB" },
-  { id: 19, nama_provinsi: "NTT" },
-  { id: 20, nama_provinsi: "Kalimantan Barat" },
-  { id: 21, nama_provinsi: "Kalimantan Tengah" },
-  { id: 22, nama_provinsi: "Kalimantan Selatan" },
-  { id: 23, nama_provinsi: "Kalimantan Timur" },
-  { id: 24, nama_provinsi: "Kalimantan Utara" },
-  { id: 25, nama_provinsi: "Sulawesi Utara" },
-  { id: 26, nama_provinsi: "Sulawesi Tengah" },
-  { id: 27, nama_provinsi: "Sulawesi Selatan" },
-  { id: 28, nama_provinsi: "Sulawesi Tenggara" },
-  { id: 29, nama_provinsi: "Gorontalo" },
-  { id: 30, nama_provinsi: "Sulawesi Barat" },
-  { id: 31, nama_provinsi: "Maluku" },
-  { id: 32, nama_provinsi: "Maluku Utara" },
-  { id: 33, nama_provinsi: "Papua Barat" },
-  { id: 34, nama_provinsi: "Papua" },
-];
-
-const ALUMNI_DB = [
-  { id: 1, nip: "198203152006041002", nama: "Ridwan Kamil Prasetyo", jabatan: "Kepala Bidang", unit_kerja: "BKN Pusat", unit_kerja_id: 1, provinsi: "DKI Jakarta", provinsi_id: 11, pkp: "Lulus", pka: "Lulus" },
-  { id: 2, nip: "197908252004012003", nama: "Siti Rahayu Wulandari", jabatan: "Kepala Sub Bagian", unit_kerja: "Kemendagri", unit_kerja_id: 2, provinsi: "Jawa Barat", provinsi_id: 12, pkp: "Lulus", pka: "Tidak Lulus" },
-  { id: 3, nip: "198506102009031005", nama: "Ahmad Fauzi Hakim", jabatan: "Analis Kebijakan", unit_kerja: "Kemenkeu", unit_kerja_id: 3, provinsi: "Jawa Tengah", provinsi_id: 13, pkp: "Lulus", pka: null },
-  { id: 4, nip: "198712052010012001", nama: "Dewi Lestari Safitri", jabatan: "Kepala Seksi", unit_kerja: "Kemenkes", unit_kerja_id: 4, provinsi: "Jawa Timur", provinsi_id: 15, pkp: "Belum", pka: "Belum" },
-  { id: 5, nip: "198001302003121004", nama: "Budi Santoso Permadi", jabatan: "Kepala Bidang", unit_kerja: "BPS Nasional", unit_kerja_id: 5, provinsi: "Sumatera Utara", provinsi_id: 2, pkp: "Lulus", pka: "Lulus" },
-  { id: 6, nip: "199003201912012002", nama: "Rina Fitriani Putri", jabatan: "Perencana", unit_kerja: "Kemenpan RB", unit_kerja_id: 6, provinsi: "Bali", provinsi_id: 17, pkp: "Tidak Lulus", pka: null },
-  { id: 7, nip: "197805142001121003", nama: "Hendra Kurniawan Susilo", jabatan: "Auditor", unit_kerja: "BPKP", unit_kerja_id: 7, provinsi: "Sulawesi Selatan", provinsi_id: 27, pkp: "Lulus", pka: "Lulus" },
-  { id: 8, nip: "198904162012012004", nama: "Yulia Permatasari", jabatan: "Kasubbid", unit_kerja: "Kementan", unit_kerja_id: 8, provinsi: "Kalimantan Timur", provinsi_id: 23, pkp: "Lulus", pka: "Belum" },
-];
-
 // ── STATE ─────────────────────────────────────────────────────────
-let selectedUnitKerjaId = null;
-let selectedUnitKerjaLabel = "";
-let selectedProvinsiId = null;
-let selectedProvinsiLabel = "";
-let searchStatus = "idle"; // idle | loading | done | notfound
+let ALUMNI_DB          = [];   // diisi dari API
+let UNIT_KERJA_API     = [];   // diisi dari API  [{ id, nama_unit }]
+let selectedUnitKerja  = "";   // label string
+let selectedProvinsi   = "";   // label string
+
+// ── PROVINSI (tetap statis – tidak ada di spreadsheet) ────────────
+const PROVINSI = [
+  "Aceh","Sumatera Utara","Sumatera Barat","Riau","Kepulauan Riau",
+  "Jambi","Sumatera Selatan","Bengkulu","Lampung","Bangka Belitung",
+  "DKI Jakarta","Jawa Barat","Jawa Tengah","DI Yogyakarta","Jawa Timur",
+  "Banten","Bali","NTB","NTT","Kalimantan Barat","Kalimantan Tengah",
+  "Kalimantan Selatan","Kalimantan Timur","Kalimantan Utara",
+  "Sulawesi Utara","Sulawesi Tengah","Sulawesi Selatan","Sulawesi Tenggara",
+  "Gorontalo","Sulawesi Barat","Maluku","Maluku Utara","Papua Barat","Papua",
+];
+
+// ================================================================
+//  INIT – fetch data dari Apps Script lalu bangun UI
+// ================================================================
+document.addEventListener("DOMContentLoaded", async () => {
+  initNavbar();
+
+  // Tampilkan skeleton stats selama loading
+  setHeroStats(null);
+
+  try {
+    const data = await fetchAllData();
+
+    ALUMNI_DB      = data.alumni      || [];
+    UNIT_KERJA_API = (data.unitKerjaList || []).map((u, i) => ({ id: i + 1, nama_unit: u }));
+
+    // Update hero stats
+    setHeroStats(data);
+
+    // Inisialisasi dropdown
+    if (document.getElementById("unit-kerja-btn")) {
+      initDropdown({
+        btnId     : "unit-kerja-btn",
+        dropdownId: "unit-kerja-dropdown",
+        listId    : "unit-kerja-list",
+        searchId  : "unit-kerja-search",
+        items     : UNIT_KERJA_API,
+        labelKey  : "nama_unit",
+        onSelect  : (id, label) => {
+          selectedUnitKerja = label;
+          document.getElementById("unit-kerja-label").textContent = label || "Semua Unit Kerja";
+          document.getElementById("unit-kerja-id").value = label;
+        },
+      });
+
+      const provItems = PROVINSI.map((p, i) => ({ id: i + 1, nama_provinsi: p }));
+      initDropdown({
+        btnId     : "provinsi-btn",
+        dropdownId: "provinsi-dropdown",
+        listId    : "provinsi-list",
+        searchId  : "provinsi-search",
+        items     : provItems,
+        labelKey  : "nama_provinsi",
+        onSelect  : (id, label) => {
+          selectedProvinsi = label;
+          document.getElementById("provinsi-label").textContent = label || "Semua";
+          document.getElementById("provinsi-id").value = label;
+        },
+      });
+    }
+
+  } catch (err) {
+    console.error("Gagal load data SIAPEL:", err);
+    setHeroStats("error");
+  }
+
+  initCounters();
+});
+
+// ================================================================
+//  HERO STATS – update angka counter dari data API
+// ================================================================
+function setHeroStats(data) {
+  const statAlumni   = document.querySelector("#hero-stats .stat-value[data-key='alumni']");
+  const statUnit     = document.querySelector("#hero-stats .stat-value[data-key='unit']");
+  const statProvinsi = document.querySelector("#hero-stats .stat-value[data-key='provinsi']");
+
+  if (!statAlumni) return; // bukan di halaman beranda
+
+  if (data === null) {
+    // loading state
+    [statAlumni, statUnit, statProvinsi].forEach(el => { if (el) el.textContent = "..."; });
+    return;
+  }
+  if (data === "error") {
+    [statAlumni, statUnit, statProvinsi].forEach(el => { if (el) el.textContent = "-"; });
+    return;
+  }
+
+  const jumlahAlumni   = (data.alumni        || []).length;
+  const jumlahUnit     = (data.unitKerjaList || []).length;
+  const jumlahProvinsi = new Set((data.alumni || []).map(a => a.provinsi).filter(Boolean)).size;
+
+  // Set data-target untuk animasi counter
+  if (statAlumni)   { statAlumni.dataset.target   = jumlahAlumni;   statAlumni.textContent   = jumlahAlumni; }
+  if (statUnit)     { statUnit.dataset.target      = jumlahUnit;     statUnit.textContent     = jumlahUnit; }
+  if (statProvinsi) { statProvinsi.dataset.target  = jumlahProvinsi; statProvinsi.textContent = jumlahProvinsi; }
+
+  // Update about-section stats juga
+  const aboutAlumni   = document.querySelector(".about-stat-value[data-key='alumni']");
+  const aboutUnit     = document.querySelector(".about-stat-value[data-key='unit']");
+  const aboutProvinsi = document.querySelector(".about-stat-value[data-key='provinsi']");
+  if (aboutAlumni)   aboutAlumni.textContent   = jumlahAlumni.toLocaleString("id-ID");
+  if (aboutUnit)     aboutUnit.textContent      = jumlahUnit;
+  if (aboutProvinsi) aboutProvinsi.textContent  = jumlahProvinsi;
+}
 
 // ================================================================
 //  NAVBAR
 // ================================================================
-(function initNavbar() {
-  const navbar = document.getElementById("navbar");
+function initNavbar() {
+  const navbar    = document.getElementById("navbar");
   const hamburger = document.getElementById("hamburger");
   const mobileMenu = document.getElementById("mobile-menu");
 
   // Scroll effect
-  window.addEventListener(
-    "scroll",
-    () => {
-      navbar.classList.toggle("scrolled", window.scrollY > 12);
-    },
-    { passive: true },
-  );
+  window.addEventListener("scroll", () => {
+    navbar.classList.toggle("scrolled", window.scrollY > 12);
+  }, { passive: true });
 
   // Hamburger
   if (hamburger) {
@@ -114,12 +163,12 @@ let searchStatus = "idle"; // idle | loading | done | notfound
     const el = document.getElementById(id);
     if (el) observer.observe(el);
   });
-})();
+}
 
 // ================================================================
-//  HERO 
+//  HERO COUNTERS (animasi angka)
 // ================================================================
-(function initCounters() {
+function initCounters() {
   const statsEl = document.getElementById("hero-stats");
   if (!statsEl) return;
   const counters = statsEl.querySelectorAll(".stat-value");
@@ -130,16 +179,16 @@ let searchStatus = "idle"; // idle | loading | done | notfound
     animated = true;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      counters.forEach((c) => (c.textContent = parseInt(c.dataset.target).toLocaleString("id-ID")));
+      counters.forEach((c) => (c.textContent = parseInt(c.dataset.target || 0).toLocaleString("id-ID")));
       return;
     }
 
     const duration = 900;
-    const start = performance.now();
-    const targets = Array.from(counters).map((c) => parseInt(c.dataset.target));
+    const start    = performance.now();
+    const targets  = Array.from(counters).map((c) => parseInt(c.dataset.target || 0));
 
     const step = (now) => {
-      const p = Math.min((now - start) / duration, 1);
+      const p    = Math.min((now - start) / duration, 1);
       const ease = 1 - Math.pow(1 - p, 3);
       counters.forEach((c, i) => {
         c.textContent = Math.round(targets[i] * ease).toLocaleString("id-ID");
@@ -150,53 +199,50 @@ let searchStatus = "idle"; // idle | loading | done | notfound
   };
 
   const io = new IntersectionObserver(
-    (entries) => {
-      if (entries[0].isIntersecting) runCounters();
-    },
+    (entries) => { if (entries[0].isIntersecting) runCounters(); },
     { threshold: 0.4 },
   );
   io.observe(statsEl);
-})();
+}
 
 // ================================================================
 //  DROPDOWN (Unit Kerja & Provinsi)
 // ================================================================
 function initDropdown(config) {
   const { btnId, dropdownId, listId, searchId, onSelect, items, labelKey } = config;
-  const btn = document.getElementById(btnId);
-  const dropdown = document.getElementById(dropdownId);
-  const list = document.getElementById(listId);
+  const btn         = document.getElementById(btnId);
+  const dropdown    = document.getElementById(dropdownId);
+  const list        = document.getElementById(listId);
   const searchInput = document.getElementById(searchId);
   if (!btn || !dropdown) return;
 
   const renderList = (query = "") => {
-    const q = query.toLowerCase().trim();
+    const q        = query.toLowerCase().trim();
     const filtered = q ? items.filter((i) => i[labelKey].toLowerCase().includes(q)) : items;
     list.innerHTML = `
-            <li>
-                <button type="button" class="dropdown-item" data-id="" data-label="">Semua ${labelKey === "nama_unit" ? "Unit Kerja" : "Provinsi"}</button>
-            </li>
-            ${filtered
-              .map(
-                (i) => `
-                <li>
-                    <button type="button" class="dropdown-item" data-id="${i.id}" data-label="${i[labelKey]}">${i[labelKey]}</button>
-                </li>
-            `,
-              )
-              .join("")}
-            ${filtered.length === 0 ? '<li class="dropdown-empty">Tidak ada hasil</li>' : ""}
-        `;
+      <li>
+        <button type="button" class="dropdown-item" data-id="" data-label="">
+          Semua ${labelKey === "nama_unit" ? "Unit Kerja" : "Provinsi"}
+        </button>
+      </li>
+      ${filtered.map((i) => `
+        <li>
+          <button type="button" class="dropdown-item" data-id="${i.id}" data-label="${i[labelKey]}">
+            ${i[labelKey]}
+          </button>
+        </li>
+      `).join("")}
+      ${filtered.length === 0 ? '<li class="dropdown-empty">Tidak ada hasil</li>' : ""}
+    `;
     list.querySelectorAll(".dropdown-item").forEach((item) => {
       item.addEventListener("click", () => {
-        const id = item.dataset.id ? parseInt(item.dataset.id) : null;
+        const id    = item.dataset.id ? parseInt(item.dataset.id) : null;
         const label = item.dataset.label;
         onSelect(id, label);
         dropdown.hidden = true;
         btn.setAttribute("aria-expanded", "false");
         searchInput.value = "";
         renderList();
-        // Update active class
         list.querySelectorAll(".dropdown-item").forEach((b) => b.classList.remove("selected"));
         item.classList.add("selected");
       });
@@ -234,114 +280,85 @@ function closeAllDropdowns() {
 
 document.addEventListener("click", closeAllDropdowns);
 
-// Init dropdowns if on public page
-if (document.getElementById("unit-kerja-btn")) {
-  initDropdown({
-    btnId: "unit-kerja-btn",
-    dropdownId: "unit-kerja-dropdown",
-    listId: "unit-kerja-list",
-    searchId: "unit-kerja-search",
-    items: UNIT_KERJA,
-    labelKey: "nama_unit",
-    onSelect: (id, label) => {
-      selectedUnitKerjaId = id;
-      selectedUnitKerjaLabel = label;
-      document.getElementById("unit-kerja-label").textContent = label || "Semua Unit Kerja";
-      document.getElementById("unit-kerja-id").value = id || "";
-    },
-  });
-
-  initDropdown({
-    btnId: "provinsi-btn",
-    dropdownId: "provinsi-dropdown",
-    listId: "provinsi-list",
-    searchId: "provinsi-search",
-    items: PROVINSI,
-    labelKey: "nama_provinsi",
-    onSelect: (id, label) => {
-      selectedProvinsiId = id;
-      selectedProvinsiLabel = label;
-      document.getElementById("provinsi-label").textContent = label || "Semua";
-      document.getElementById("provinsi-id").value = id || "";
-    },
-  });
-}
-
 // ================================================================
 //  ALUMNI SEARCH
 // ================================================================
-function cariAlumni(e) {
+async function cariAlumni(e) {
   e.preventDefault();
   const q = document.getElementById("q").value.trim().toLowerCase();
 
+  // Boleh kosong — pencarian tetap jalan pakai filter unit/provinsi
+
   const hasilSection = document.getElementById("hasil-section");
-  const skeleton = document.getElementById("skeleton");
-  const tabelHasil = document.getElementById("tabel-hasil");
-  const notFound = document.getElementById("not-found");
-  const hasilLabel = document.getElementById("hasil-label");
-  const tabelBody = document.getElementById("tabel-body");
+  const skeleton     = document.getElementById("skeleton");
+  const tabelHasil   = document.getElementById("tabel-hasil");
+  const notFound     = document.getElementById("not-found");
+  const hasilLabel   = document.getElementById("hasil-label");
+  const tabelBody    = document.getElementById("tabel-body");
 
-  // Show section, loading
+  // Tampilkan loading
   hasilSection.hidden = false;
-  skeleton.hidden = false;
-  tabelHasil.hidden = true;
-  notFound.hidden = true;
+  skeleton.hidden     = false;
+  tabelHasil.hidden   = true;
+  notFound.hidden     = true;
   hasilLabel.textContent = "Memuat data...";
-
   hasilSection.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // Simulasi delay API
-  setTimeout(() => {
+  try {
+    // Ambil data (dari cache jika ada)
+    const data = await fetchAllData();
+    ALUMNI_DB = data.alumni || [];
+
     skeleton.hidden = true;
 
-    // Filter data
+    // Filter
     const results = ALUMNI_DB.filter((a) => {
-      const matchQ = !q || a.nama.toLowerCase().includes(q) || a.nip.includes(q);
-      const matchUnit = !selectedUnitKerjaId || a.unit_kerja_id === selectedUnitKerjaId;
-      const matchProv = !selectedProvinsiId || a.provinsi_id === selectedProvinsiId;
+      const matchQ    = !q || a.nama.toLowerCase().includes(q) || a.nip.includes(q);
+      const matchUnit = !selectedUnitKerja || a.unitKerja === selectedUnitKerja;
+      const matchProv = !selectedProvinsi  || a.provinsi  === selectedProvinsi;
       return matchQ && matchUnit && matchProv;
     });
 
     if (results.length > 0) {
-      tabelBody.innerHTML = results
-        .map(
-          (a) => `
-                <tr>
-                    <td class="mono" style="color:rgba(15,15,15,.7)">${a.nip}</td>
-                    <td style="font-weight:600;color:#0F0F0F">${a.nama}</td>
-                    <td style="color:rgba(15,15,15,.7)">${a.jabatan || "-"}</td>
-                    <td style="color:rgba(15,15,15,.7)">${a.unit_kerja || "-"}</td>
-                    <td style="color:rgba(15,15,15,.7)">${a.provinsi || "-"}</td>
-                </tr>
-            `,
-        )
-        .join("");
+      tabelBody.innerHTML = results.map((a) => `
+        <tr>
+          <td class="mono" style="color:rgba(15,15,15,.7)">${a.nip || "-"}</td>
+          <td style="font-weight:600;color:#0F0F0F">${a.nama || "-"}</td>
+          <td style="color:rgba(15,15,15,.7)">${a.jabatan || "-"}</td>
+          <td style="color:rgba(15,15,15,.7)">${a.unitKerja || "-"}</td>
+          <td style="color:rgba(15,15,15,.7)">${a.provinsi || "-"}</td>
+        </tr>
+      `).join("");
       tabelHasil.hidden = false;
-      notFound.hidden = true;
+      notFound.hidden   = true;
       hasilLabel.textContent = `Hasil Pencarian (${results.length} ditemukan)`;
     } else {
       tabelHasil.hidden = true;
-      notFound.hidden = false;
+      notFound.hidden   = false;
       hasilLabel.textContent = "Tidak Ditemukan";
     }
-  }, 800);
+
+  } catch (err) {
+    skeleton.hidden = true;
+    notFound.hidden = false;
+    hasilLabel.textContent = "Gagal memuat data";
+    console.error("cariAlumni error:", err);
+  }
 }
 
 function resetSearch() {
   document.getElementById("q").value = "";
-  selectedUnitKerjaId = null;
-  selectedUnitKerjaLabel = "";
-  selectedProvinsiId = null;
-  selectedProvinsiLabel = "";
+  selectedUnitKerja = "";
+  selectedProvinsi  = "";
 
   const ukLabel = document.getElementById("unit-kerja-label");
-  const pLabel = document.getElementById("provinsi-label");
-  const ukId = document.getElementById("unit-kerja-id");
-  const pId = document.getElementById("provinsi-id");
+  const pLabel  = document.getElementById("provinsi-label");
+  const ukId    = document.getElementById("unit-kerja-id");
+  const pId     = document.getElementById("provinsi-id");
   if (ukLabel) ukLabel.textContent = "Semua Unit Kerja";
-  if (pLabel) pLabel.textContent = "Semua";
-  if (ukId) ukId.value = "";
-  if (pId) pId.value = "";
+  if (pLabel)  pLabel.textContent  = "Semua";
+  if (ukId)    ukId.value          = "";
+  if (pId)     pId.value           = "";
 
   const hasilSection = document.getElementById("hasil-section");
   if (hasilSection) hasilSection.hidden = true;

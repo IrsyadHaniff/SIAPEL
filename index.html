@@ -91,15 +91,15 @@
         <dl class="hero-stats" id="hero-stats">
           <div class="stat-item">
             <dt class="stat-label">Alumni</dt>
-            <dd class="stat-value" data-target="1247">0</dd>
+            <dd class="stat-value" data-key="alumni" data-target="0">...</dd>
           </div>
           <div class="stat-item stat-item--border">
             <dt class="stat-label">Unit Kerja</dt>
-            <dd class="stat-value" data-target="34">0</dd>
+            <dd class="stat-value" data-key="unit" data-target="0">...</dd>
           </div>
           <div class="stat-item">
             <dt class="stat-label">Provinsi</dt>
-            <dd class="stat-value" data-target="34">0</dd>
+            <dd class="stat-value" data-key="provinsi" data-target="0">...</dd>
           </div>
         </dl>
       </div>
@@ -127,7 +127,7 @@
                   <circle cx="11" cy="11" r="7" />
                   <path d="m20 20-3.5-3.5" stroke-linecap="round" />
                 </svg>
-                <input type="text" id="q" name="q" placeholder="Contoh: Ridwan atau 198203" class="form-input form-input--icon" required />
+                <input type="text" id="q" name="q" placeholder="Contoh: Ridwan atau 198203 (opsional)" class="form-input form-input--icon" />
               </div>
             </div>
 
@@ -249,14 +249,14 @@
                 </svg>
               </div>
               <p class="about-stat-label">Total Alumni</p>
-              <p class="about-stat-value">1.247</p>
+              <p class="about-stat-value" data-key="alumni">...</p>
             </div>
             <div class="about-stat-card">
               <div class="about-stat-icon about-stat-icon--blue">
                 <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6" stroke-linecap="round" /></svg>
               </div>
               <p class="about-stat-label">Unit Kerja</p>
-              <p class="about-stat-value">34</p>
+              <p class="about-stat-value" data-key="unit">...</p>
             </div>
             <div class="about-stat-card">
               <div class="about-stat-icon about-stat-icon--green">
@@ -266,7 +266,7 @@
                 </svg>
               </div>
               <p class="about-stat-label">Provinsi</p>
-              <p class="about-stat-value">34</p>
+              <p class="about-stat-value" data-key="provinsi">...</p>
             </div>
             <div class="about-stat-card">
               <div class="about-stat-icon about-stat-icon--pink">
@@ -339,6 +339,7 @@
       </div>
     </footer>
 
+    <script src="js/api.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="admin-body">
 
@@ -93,14 +93,7 @@
                         <label for="filter-unit" class="field-label">Unit Kerja</label>
                         <select id="filter-unit" name="unit_kerja_id" class="form-input form-select" onchange="filterAlumniLive()">
                             <option value="">Semua Unit</option>
-                            <option value="1">BKN Pusat</option>
-                            <option value="2">Kemendagri</option>
-                            <option value="3">Kemenkeu</option>
-                            <option value="4">Kemenkes</option>
-                            <option value="5">BPS Nasional</option>
-                            <option value="6">Kemenpan RB</option>
-                            <option value="7">BPKP</option>
-                            <option value="8">Kementan</option>
+                            <!-- diisi oleh JS -->
                         </select>
                     </div>
 
@@ -108,14 +101,7 @@
                         <label for="filter-provinsi" class="field-label">Provinsi</label>
                         <select id="filter-provinsi" name="provinsi_id" class="form-input form-select" onchange="filterAlumniLive()">
                             <option value="">Semua Provinsi</option>
-                            <option value="1">DKI Jakarta</option>
-                            <option value="2">Jawa Barat</option>
-                            <option value="3">Jawa Tengah</option>
-                            <option value="4">Jawa Timur</option>
-                            <option value="5">Sumatera Utara</option>
-                            <option value="6">Bali</option>
-                            <option value="7">Sulawesi Selatan</option>
-                            <option value="8">Kalimantan Timur</option>
+                            <!-- diisi oleh JS -->
                         </select>
                     </div>
 
@@ -156,25 +142,56 @@
         </main>
     </div>
 
+    <script src="../js/api.js"></script>
     <script>
-        // ======= DATA DUMMY =======
-        const allAlumni = [
-            { id:1, nama:'Ridwan Kamil Prasetyo', nip:'198203152006041002', jabatan:'Kepala Bidang', unit:'BKN Pusat', provinsi:'DKI Jakarta', pkp:'Lulus', pka:'Lulus' },
-            { id:2, nama:'Siti Rahayu Wulandari', nip:'197908252004012003', jabatan:'Kepala Sub Bagian', unit:'Kemendagri', provinsi:'Jawa Barat', pkp:'Lulus', pka:'Tidak Lulus' },
-            { id:3, nama:'Ahmad Fauzi Hakim', nip:'198506102009031005', jabatan:'Analis Kebijakan', unit:'Kemenkeu', provinsi:'Jawa Tengah', pkp:'Lulus', pka:'-' },
-            { id:4, nama:'Dewi Lestari Safitri', nip:'198712052010012001', jabatan:'Kepala Seksi', unit:'Kemenkes', provinsi:'Jawa Timur', pkp:'Belum', pka:'Belum' },
-            { id:5, nama:'Budi Santoso Permadi', nip:'198001302003121004', jabatan:'Kepala Bidang', unit:'BPS Nasional', provinsi:'Sumatera Utara', pkp:'Lulus', pka:'Lulus' },
-            { id:6, nama:'Rina Fitriani Putri', nip:'199003201912012002', jabatan:'Perencana', unit:'Kemenpan RB', provinsi:'Bali', pkp:'Tidak Lulus', pka:'-' },
-            { id:7, nama:'Hendra Kurniawan', nip:'197805142001121003', jabatan:'Auditor', unit:'BPKP', provinsi:'Sulawesi Selatan', pkp:'Lulus', pka:'Lulus' },
-            { id:8, nama:'Yulia Permatasari', nip:'198904162012012004', jabatan:'Kasubbid', unit:'Kementan', provinsi:'Kalimantan Timur', pkp:'Lulus', pka:'Belum' },
-            { id:9, nama:'Teguh Widodo Santoso', nip:'197612252000031002', jabatan:'Kepala Bagian', unit:'BKN Pusat', provinsi:'DKI Jakarta', pkp:'Lulus', pka:'Lulus' },
-            { id:10, nama:'Maria Kristiani', nip:'199105122014012001', jabatan:'Analis SDM', unit:'Kemendagri', provinsi:'Jawa Barat', pkp:'Belum', pka:'-' },
-        ];
-
+        // ============================
+        // STATE
+        // ============================
+        let allAlumni   = [];
+        let filteredData = [];
         let currentPage = 1;
-        const perPage = 5;
-        let filteredData = [...allAlumni];
+        const perPage   = 10;
 
+        // ============================
+        // INIT – load dari API
+        // ============================
+        (async () => {
+            try {
+                const data = await fetchAllData();
+                allAlumni    = data.alumni || [];
+                filteredData = [...allAlumni];
+
+                // Isi dropdown Unit Kerja
+                const unitSelect = document.getElementById('filter-unit');
+                (data.unitKerjaList || []).sort().forEach(u => {
+                    const opt = document.createElement('option');
+                    opt.value       = u;
+                    opt.textContent = u;
+                    unitSelect.appendChild(opt);
+                });
+
+                // Isi dropdown Provinsi (dari data alumni)
+                const provSet = new Set(allAlumni.map(a => a.provinsi).filter(Boolean));
+                const provSelect = document.getElementById('filter-provinsi');
+                [...provSet].sort().forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value       = p;
+                    opt.textContent = p;
+                    provSelect.appendChild(opt);
+                });
+
+                renderTable();
+
+            } catch (err) {
+                console.error('Admin alumni load error:', err);
+                document.getElementById('alumni-tbody').innerHTML =
+                    '<tr><td colspan="9" style="text-align:center;padding:3rem;color:#e74c3c">Gagal memuat data. Periksa koneksi.</td></tr>';
+            }
+        })();
+
+        // ============================
+        // RENDER TABEL
+        // ============================
         function renderTable() {
             const tbody = document.getElementById('alumni-tbody');
             const start = (currentPage - 1) * perPage;
@@ -188,30 +205,23 @@
                     </div></td></tr>`;
             } else {
                 tbody.innerHTML = slice.map((a, i) => `
-                    <tr class="tabel-row-hover" data-id="${a.id}">
+                    <tr class="tabel-row-hover">
                         <td class="text-muted text-xs">${start + i + 1}</td>
                         <td>
                             <div style="display:flex;align-items:center;gap:.75rem;">
-                                <span class="avatar-initial">${a.nama[0].toUpperCase()}</span>
-                                <span class="font-medium">${a.nama}</span>
+                                <span class="avatar-initial">${(a.nama || '?')[0].toUpperCase()}</span>
+                                <span class="font-medium">${a.nama || '-'}</span>
                             </div>
                         </td>
-                        <td class="mono text-muted text-xs">${a.nip}</td>
+                        <td class="mono text-muted text-xs">${a.nip || '-'}</td>
                         <td class="text-muted">${a.jabatan || '-'}</td>
-                        <td class="text-muted">${a.unit || '-'}</td>
+                        <td class="text-muted">${a.unitKerja || '-'}</td>
                         <td class="text-muted">${a.provinsi || '-'}</td>
                         <td>${badgePKP(a.pkp)}</td>
                         <td>${badgePKA(a.pka)}</td>
                         <td>
                             <div class="action-buttons action-buttons--right">
-                                <a href="admin-alumni-form.html?mode=edit&id=${a.id}" class="btn-edit-sm-outline">
-                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke-linecap="round"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke-linecap="round"/></svg>
-                                    Edit
-                                </a>
-                                <button onclick="hapusAlumni(${a.id},'${a.nama.replace(/'/g, "\\'")}')" class="btn-delete-sm-outline">
-                                    <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6" stroke-linecap="round"/><path d="M9 6V4h6v2" stroke-linecap="round"/></svg>
-                                    Hapus
-                                </button>
+                                <span class="text-muted" style="font-size:.8rem">No. ${a.no || '-'}</span>
                             </div>
                         </td>
                     </tr>
@@ -231,7 +241,7 @@
 
         function renderPagination() {
             const total = Math.ceil(filteredData.length / perPage);
-            const pag = document.getElementById('pagination');
+            const pag   = document.getElementById('pagination');
             if (total <= 1) { pag.innerHTML = ''; return; }
             let html = '';
             for (let i = 1; i <= total; i++) {
@@ -242,18 +252,18 @@
 
         function goPage(p) { currentPage = p; renderTable(); }
 
+        // ============================
+        // FILTER
+        // ============================
         function filterAlumniLive() {
-            const q = document.getElementById('filter-q').value.toLowerCase();
-            const unitId = document.getElementById('filter-unit').value;
-            const provId = document.getElementById('filter-provinsi').value;
-
-            const unitMap = {'1':'BKN Pusat','2':'Kemendagri','3':'Kemenkeu','4':'Kemenkes','5':'BPS Nasional','6':'Kemenpan RB','7':'BPKP','8':'Kementan'};
-            const provMap = {'1':'DKI Jakarta','2':'Jawa Barat','3':'Jawa Tengah','4':'Jawa Timur','5':'Sumatera Utara','6':'Bali','7':'Sulawesi Selatan','8':'Kalimantan Timur'};
+            const q      = document.getElementById('filter-q').value.toLowerCase().trim();
+            const unit   = document.getElementById('filter-unit').value;
+            const prov   = document.getElementById('filter-provinsi').value;
 
             filteredData = allAlumni.filter(a => {
-                const matchQ = !q || a.nama.toLowerCase().includes(q) || a.nip.includes(q);
-                const matchUnit = !unitId || a.unit === unitMap[unitId];
-                const matchProv = !provId || a.provinsi === provMap[provId];
+                const matchQ    = !q    || (a.nama || '').toLowerCase().includes(q) || (a.nip || '').includes(q);
+                const matchUnit = !unit || a.unitKerja === unit;
+                const matchProv = !prov || a.provinsi  === prov;
                 return matchQ && matchUnit && matchProv;
             });
             currentPage = 1;
@@ -263,26 +273,17 @@
         function filterAlumni(e) { e.preventDefault(); filterAlumniLive(); }
 
         function resetFilter() {
-            document.getElementById('filter-q').value = '';
-            document.getElementById('filter-unit').value = '';
+            document.getElementById('filter-q').value        = '';
+            document.getElementById('filter-unit').value     = '';
             document.getElementById('filter-provinsi').value = '';
             filteredData = [...allAlumni];
-            currentPage = 1;
+            currentPage  = 1;
             renderTable();
         }
 
-        function hapusAlumni(id, nama) {
-            if (confirm(`Yakin hapus alumni "${nama}"?`)) {
-                const idx = allAlumni.findIndex(a => a.id === id);
-                if (idx > -1) allAlumni.splice(idx, 1);
-                filterAlumniLive();
-                const flash = document.getElementById('flash-success');
-                document.getElementById('flash-msg').textContent = `Alumni "${nama}" berhasil dihapus.`;
-                flash.hidden = false;
-                setTimeout(() => flash.hidden = true, 4000);
-            }
-        }
-
+        // ============================
+        // SIDEBAR
+        // ============================
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('sidebar--open');
             document.getElementById('sidebar-overlay').classList.toggle('overlay--visible');
@@ -296,11 +297,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('success')) {
             document.getElementById('flash-msg').textContent = decodeURIComponent(urlParams.get('success'));
-            document.getElementById('flash-success').hidden = false;
+            document.getElementById('flash-success').hidden  = false;
             setTimeout(() => document.getElementById('flash-success').hidden = true, 4000);
         }
-
-        renderTable();
     </script>
 </body>
 </html>

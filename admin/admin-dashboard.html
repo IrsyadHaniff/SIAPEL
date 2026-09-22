@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body class="admin-body">
 
@@ -86,7 +86,7 @@
                         </span>
                         <div>
                             <p class="stat-card-label">Total Alumni</p>
-                            <p class="stat-card-value">1.247</p>
+                            <p class="stat-card-value" id="dash-total-alumni">...</p>
                         </div>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                         </span>
                         <div>
                             <p class="stat-card-label">Unit Kerja</p>
-                            <p class="stat-card-value">34</p>
+                            <p class="stat-card-value" id="dash-total-unit">...</p>
                         </div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
                         </span>
                         <div>
                             <p class="stat-card-label">Provinsi</p>
-                            <p class="stat-card-value">34</p>
+                            <p class="stat-card-value" id="dash-total-provinsi">...</p>
                         </div>
                     </div>
                 </div>
@@ -135,67 +135,8 @@
                                 <th class="text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td class="font-medium">Ridwan Kamil Prasetyo</td>
-                                <td class="mono text-muted">198203152006041002</td>
-                                <td class="text-muted">BKN Pusat</td>
-                                <td class="text-muted">DKI Jakarta</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="admin-alumni-form.html?mode=edit&id=1" class="btn-edit-sm">Edit</a>
-                                        <button onclick="hapusAlumni('Ridwan Kamil Prasetyo')" class="btn-delete-sm">Hapus</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-medium">Siti Rahayu Wulandari</td>
-                                <td class="mono text-muted">197908252004012003</td>
-                                <td class="text-muted">Kemendagri</td>
-                                <td class="text-muted">Jawa Barat</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="admin-alumni-form.html?mode=edit&id=2" class="btn-edit-sm">Edit</a>
-                                        <button onclick="hapusAlumni('Siti Rahayu Wulandari')" class="btn-delete-sm">Hapus</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-medium">Ahmad Fauzi Hakim</td>
-                                <td class="mono text-muted">198506102009031005</td>
-                                <td class="text-muted">Kemenkeu</td>
-                                <td class="text-muted">Jawa Tengah</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="admin-alumni-form.html?mode=edit&id=3" class="btn-edit-sm">Edit</a>
-                                        <button onclick="hapusAlumni('Ahmad Fauzi Hakim')" class="btn-delete-sm">Hapus</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-medium">Dewi Lestari Safitri</td>
-                                <td class="mono text-muted">198712052010012001</td>
-                                <td class="text-muted">Kemenkes</td>
-                                <td class="text-muted">Jawa Timur</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="admin-alumni-form.html?mode=edit&id=4" class="btn-edit-sm">Edit</a>
-                                        <button onclick="hapusAlumni('Dewi Lestari Safitri')" class="btn-delete-sm">Hapus</button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-medium">Budi Santoso Permadi</td>
-                                <td class="mono text-muted">198001302003121004</td>
-                                <td class="text-muted">BPS Nasional</td>
-                                <td class="text-muted">Sumatera Utara</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a href="admin-alumni-form.html?mode=edit&id=5" class="btn-edit-sm">Edit</a>
-                                        <button onclick="hapusAlumni('Budi Santoso Permadi')" class="btn-delete-sm">Hapus</button>
-                                    </div>
-                                </td>
-                            </tr>
+                        <tbody id="dash-alumni-tbody">
+                            <tr><td colspan="5" style="text-align:center;padding:2rem;color:#999">Memuat data...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -208,7 +149,9 @@
         </main>
     </div>
 
+    <script src="../js/api.js"></script>
     <script>
+        // ── Sidebar ──────────────────────────────────
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
@@ -219,23 +162,60 @@
             document.getElementById('sidebar').classList.remove('sidebar--open');
             document.getElementById('sidebar-overlay').classList.remove('overlay--visible');
         }
-        function hapusAlumni(nama) {
-            if (confirm(`Yakin hapus alumni "${nama}"?`)) {
-                const flash = document.getElementById('flash-success');
-                document.getElementById('flash-msg').textContent = `Alumni "${nama}" berhasil dihapus.`;
-                flash.hidden = false;
-                setTimeout(() => flash.hidden = true, 4000);
-            }
-        }
 
-        // Cek flash dari halaman form
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('success')) {
+        // ── Flash ────────────────────────────────────
+        function showFlash(msg) {
             const flash = document.getElementById('flash-success');
-            document.getElementById('flash-msg').textContent = decodeURIComponent(urlParams.get('success'));
+            document.getElementById('flash-msg').textContent = msg;
             flash.hidden = false;
             setTimeout(() => flash.hidden = true, 4000);
         }
+
+        // ── Load data dari API ────────────────────────
+        (async () => {
+            try {
+                const data = await fetchAllData();
+                const alumni = data.alumni || [];
+                const unitList = data.unitKerjaList || [];
+
+                // Update stat cards
+                const jumlahProvinsi = new Set(alumni.map(a => a.provinsi).filter(Boolean)).size;
+                document.getElementById('dash-total-alumni').textContent   = alumni.length.toLocaleString('id-ID');
+                document.getElementById('dash-total-unit').textContent     = unitList.length;
+                document.getElementById('dash-total-provinsi').textContent = jumlahProvinsi;
+
+                // Render 5 alumni terbaru (urutan terakhir dari spreadsheet)
+                const terbaru = alumni.slice(-5).reverse();
+                const tbody   = document.getElementById('dash-alumni-tbody');
+
+                if (terbaru.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#999">Belum ada data alumni.</td></tr>';
+                } else {
+                    tbody.innerHTML = terbaru.map(a => `
+                        <tr>
+                            <td class="font-medium">${a.nama || '-'}</td>
+                            <td class="mono text-muted">${a.nip || '-'}</td>
+                            <td class="text-muted">${a.unitKerja || '-'}</td>
+                            <td class="text-muted">${a.provinsi || '-'}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <span class="text-muted" style="font-size:.8rem">No. ${a.no || '-'}</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+            } catch (err) {
+                console.error('Dashboard load error:', err);
+                document.getElementById('dash-alumni-tbody').innerHTML =
+                    '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#e74c3c">Gagal memuat data. Periksa koneksi.</td></tr>';
+            }
+        })();
+
+        // Cek flash dari halaman form
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('success')) showFlash(decodeURIComponent(urlParams.get('success')));
     </script>
 </body>
 </html>
