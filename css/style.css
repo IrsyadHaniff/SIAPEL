@@ -23,7 +23,7 @@ html {
 body {
   font-family: "Inter", system-ui, sans-serif;
   color: #0f0f0f;
-  background: #f3e9ec;
+  background: #ffffff;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
@@ -58,7 +58,7 @@ textarea {
   --blue: #03a0ee;
   --blue-dark: #0282c0;
   --dark: #0f0f0f;
-  --pink-bg: #f3e9ec;
+  --pink-bg: #ffffff;
   --white: #ffffff;
   --text-muted: rgba(15, 15, 15, 0.5);
   --border: rgba(15, 15, 15, 0.1);
@@ -159,17 +159,17 @@ textarea {
   left: 0;
   right: 0;
   z-index: 50;
-  background: linear-gradient(to right, #f3e9ec, rgba(240, 195, 50, 0.2));
-  border-bottom: 1px solid rgba(240, 195, 50, 0.2);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(15, 15, 15, 0.08);
   transition:
     background var(--transition),
     box-shadow var(--transition);
 }
 .navbar.scrolled {
-  background: rgba(243, 233, 236, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  border-color: rgba(240, 195, 50, 0.4);
+  border-color: rgba(15, 15, 15, 0.08);
 }
 .nav-container {
   max-width: 1280px;
@@ -288,8 +288,8 @@ textarea {
 
 /* Mobile Menu */
 .mobile-menu {
-  background: var(--pink-bg);
-  border-top: 1px solid rgba(240, 195, 50, 0.3);
+  background: #ffffff;
+  border-top: 1px solid rgba(15, 15, 15, 0.08);
 }
 .mobile-nav-list {
   padding: 1rem;
@@ -344,7 +344,7 @@ textarea {
   min-height: 92vh;
   display: flex;
   align-items: center;
-  background: var(--pink-bg);
+  background: #ffffff;
   overflow: hidden;
 }
 .hero-overlay {
@@ -364,7 +364,7 @@ textarea {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(to top, var(--pink-bg) 0%, rgba(243, 233, 236, 0.75) 40%, transparent 100%);
+  background: linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0.75) 40%, transparent 100%);
 }
 .hero-content {
   position: relative;
@@ -526,7 +526,7 @@ textarea {
   padding: 5rem 0 7rem;
 }
 .about-section {
-  background: var(--pink-bg);
+  background: #f9f9f9;
   padding: 5rem 0;
 }
 .section-header {
