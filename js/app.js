@@ -1,22 +1,49 @@
 /* ================================================================
-   SIAPEL – app.js  (halaman publik – index.html)
+   SIAPEL – app.js 
    ================================================================ */
 
 // ── STATE ─────────────────────────────────────────────────────────
-let ALUMNI_DB          = [];   // diisi dari API
-let UNIT_KERJA_API     = [];   // diisi dari API  [{ id, nama_unit }]
-let selectedUnitKerja  = "";   // label string
-let selectedProvinsi   = "";   // label string
+let ALUMNI_DB = []; // diisi dari API
+let UNIT_KERJA_API = []; // diisi dari API  [{ id, nama_unit }]
+let selectedUnitKerja = ""; // label string
+let selectedProvinsi = ""; // label string
 
-// ── PROVINSI (tetap statis – tidak ada di spreadsheet) ────────────
+// ── PROVINSI  ────────────
 const PROVINSI = [
-  "Aceh","Sumatera Utara","Sumatera Barat","Riau","Kepulauan Riau",
-  "Jambi","Sumatera Selatan","Bengkulu","Lampung","Bangka Belitung",
-  "DKI Jakarta","Jawa Barat","Jawa Tengah","DI Yogyakarta","Jawa Timur",
-  "Banten","Bali","NTB","NTT","Kalimantan Barat","Kalimantan Tengah",
-  "Kalimantan Selatan","Kalimantan Timur","Kalimantan Utara",
-  "Sulawesi Utara","Sulawesi Tengah","Sulawesi Selatan","Sulawesi Tenggara",
-  "Gorontalo","Sulawesi Barat","Maluku","Maluku Utara","Papua Barat","Papua",
+  "Aceh",
+  "Sumatera Utara",
+  "Sumatera Barat",
+  "Riau",
+  "Kepulauan Riau",
+  "Jambi",
+  "Sumatera Selatan",
+  "Bengkulu",
+  "Lampung",
+  "Bangka Belitung",
+  "DKI Jakarta",
+  "Jawa Barat",
+  "Jawa Tengah",
+  "DI Yogyakarta",
+  "Jawa Timur",
+  "Banten",
+  "Bali",
+  "NTB",
+  "NTT",
+  "Kalimantan Barat",
+  "Kalimantan Tengah",
+  "Kalimantan Selatan",
+  "Kalimantan Timur",
+  "Kalimantan Utara",
+  "Sulawesi Utara",
+  "Sulawesi Tengah",
+  "Sulawesi Selatan",
+  "Sulawesi Tenggara",
+  "Gorontalo",
+  "Sulawesi Barat",
+  "Maluku",
+  "Maluku Utara",
+  "Papua Barat",
+  "Papua",
 ];
 
 // ================================================================
@@ -31,7 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const data = await fetchAllData();
 
-    ALUMNI_DB      = data.alumni      || [];
+    ALUMNI_DB = data.alumni || [];
     UNIT_KERJA_API = (data.unitKerjaList || []).map((u, i) => ({ id: i + 1, nama_unit: u }));
 
     // Update hero stats
@@ -40,13 +67,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Inisialisasi dropdown
     if (document.getElementById("unit-kerja-btn")) {
       initDropdown({
-        btnId     : "unit-kerja-btn",
+        btnId: "unit-kerja-btn",
         dropdownId: "unit-kerja-dropdown",
-        listId    : "unit-kerja-list",
-        searchId  : "unit-kerja-search",
-        items     : UNIT_KERJA_API,
-        labelKey  : "nama_unit",
-        onSelect  : (id, label) => {
+        listId: "unit-kerja-list",
+        searchId: "unit-kerja-search",
+        items: UNIT_KERJA_API,
+        labelKey: "nama_unit",
+        onSelect: (id, label) => {
           selectedUnitKerja = label;
           document.getElementById("unit-kerja-label").textContent = label || "Semua Unit Kerja";
           document.getElementById("unit-kerja-id").value = label;
@@ -55,20 +82,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const provItems = PROVINSI.map((p, i) => ({ id: i + 1, nama_provinsi: p }));
       initDropdown({
-        btnId     : "provinsi-btn",
+        btnId: "provinsi-btn",
         dropdownId: "provinsi-dropdown",
-        listId    : "provinsi-list",
-        searchId  : "provinsi-search",
-        items     : provItems,
-        labelKey  : "nama_provinsi",
-        onSelect  : (id, label) => {
+        listId: "provinsi-list",
+        searchId: "provinsi-search",
+        items: provItems,
+        labelKey: "nama_provinsi",
+        onSelect: (id, label) => {
           selectedProvinsi = label;
           document.getElementById("provinsi-label").textContent = label || "Semua";
           document.getElementById("provinsi-id").value = label;
         },
       });
     }
-
   } catch (err) {
     console.error("Gagal load data SIAPEL:", err);
     setHeroStats("error");
@@ -81,52 +107,69 @@ document.addEventListener("DOMContentLoaded", async () => {
 //  HERO STATS – update angka counter dari data API
 // ================================================================
 function setHeroStats(data) {
-  const statAlumni   = document.querySelector("#hero-stats .stat-value[data-key='alumni']");
-  const statUnit     = document.querySelector("#hero-stats .stat-value[data-key='unit']");
+  const statAlumni = document.querySelector("#hero-stats .stat-value[data-key='alumni']");
+  const statUnit = document.querySelector("#hero-stats .stat-value[data-key='unit']");
   const statProvinsi = document.querySelector("#hero-stats .stat-value[data-key='provinsi']");
 
   if (!statAlumni) return; // bukan di halaman beranda
 
   if (data === null) {
     // loading state
-    [statAlumni, statUnit, statProvinsi].forEach(el => { if (el) el.textContent = "..."; });
+    [statAlumni, statUnit, statProvinsi].forEach((el) => {
+      if (el) el.textContent = "...";
+    });
     return;
   }
   if (data === "error") {
-    [statAlumni, statUnit, statProvinsi].forEach(el => { if (el) el.textContent = "-"; });
+    [statAlumni, statUnit, statProvinsi].forEach((el) => {
+      if (el) el.textContent = "-";
+    });
     return;
   }
 
-  const jumlahAlumni   = (data.alumni        || []).length;
-  const jumlahUnit     = (data.unitKerjaList || []).length;
-  const jumlahProvinsi = new Set((data.alumni || []).map(a => a.provinsi).filter(Boolean)).size;
+  const jumlahAlumni = (data.alumni || []).length;
+  const jumlahUnit = (data.unitKerjaList || []).length;
+  const jumlahProvinsi = new Set((data.alumni || []).map((a) => a.provinsi).filter(Boolean)).size;
 
   // Set data-target untuk animasi counter
-  if (statAlumni)   { statAlumni.dataset.target   = jumlahAlumni;   statAlumni.textContent   = jumlahAlumni; }
-  if (statUnit)     { statUnit.dataset.target      = jumlahUnit;     statUnit.textContent     = jumlahUnit; }
-  if (statProvinsi) { statProvinsi.dataset.target  = jumlahProvinsi; statProvinsi.textContent = jumlahProvinsi; }
+  if (statAlumni) {
+    statAlumni.dataset.target = jumlahAlumni;
+    statAlumni.textContent = jumlahAlumni;
+  }
+  if (statUnit) {
+    statUnit.dataset.target = jumlahUnit;
+    statUnit.textContent = jumlahUnit;
+  }
+  if (statProvinsi) {
+    statProvinsi.dataset.target = jumlahProvinsi;
+    statProvinsi.textContent = jumlahProvinsi;
+  }
 
   // Update about-section stats juga
-  const aboutAlumni   = document.querySelector(".about-stat-value[data-key='alumni']");
-  const aboutUnit     = document.querySelector(".about-stat-value[data-key='unit']");
+  const aboutAlumni = document.querySelector(".about-stat-value[data-key='alumni']");
+  const aboutUnit = document.querySelector(".about-stat-value[data-key='unit']");
   const aboutProvinsi = document.querySelector(".about-stat-value[data-key='provinsi']");
-  if (aboutAlumni)   aboutAlumni.textContent   = jumlahAlumni.toLocaleString("id-ID");
-  if (aboutUnit)     aboutUnit.textContent      = jumlahUnit;
-  if (aboutProvinsi) aboutProvinsi.textContent  = jumlahProvinsi;
+  if (aboutAlumni) aboutAlumni.textContent = jumlahAlumni.toLocaleString("id-ID");
+  if (aboutUnit) aboutUnit.textContent = jumlahUnit;
+  if (aboutProvinsi) aboutProvinsi.textContent = jumlahProvinsi;
 }
 
 // ================================================================
 //  NAVBAR
 // ================================================================
 function initNavbar() {
-  const navbar    = document.getElementById("navbar");
+  const navbar = document.getElementById("navbar");
   const hamburger = document.getElementById("hamburger");
   const mobileMenu = document.getElementById("mobile-menu");
 
   // Scroll effect
-  window.addEventListener("scroll", () => {
-    navbar.classList.toggle("scrolled", window.scrollY > 12);
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      navbar.classList.toggle("scrolled", window.scrollY > 12);
+    },
+    { passive: true },
+  );
 
   // Hamburger
   if (hamburger) {
@@ -184,11 +227,11 @@ function initCounters() {
     }
 
     const duration = 900;
-    const start    = performance.now();
-    const targets  = Array.from(counters).map((c) => parseInt(c.dataset.target || 0));
+    const start = performance.now();
+    const targets = Array.from(counters).map((c) => parseInt(c.dataset.target || 0));
 
     const step = (now) => {
-      const p    = Math.min((now - start) / duration, 1);
+      const p = Math.min((now - start) / duration, 1);
       const ease = 1 - Math.pow(1 - p, 3);
       counters.forEach((c, i) => {
         c.textContent = Math.round(targets[i] * ease).toLocaleString("id-ID");
@@ -199,7 +242,9 @@ function initCounters() {
   };
 
   const io = new IntersectionObserver(
-    (entries) => { if (entries[0].isIntersecting) runCounters(); },
+    (entries) => {
+      if (entries[0].isIntersecting) runCounters();
+    },
     { threshold: 0.4 },
   );
   io.observe(statsEl);
@@ -210,14 +255,14 @@ function initCounters() {
 // ================================================================
 function initDropdown(config) {
   const { btnId, dropdownId, listId, searchId, onSelect, items, labelKey } = config;
-  const btn         = document.getElementById(btnId);
-  const dropdown    = document.getElementById(dropdownId);
-  const list        = document.getElementById(listId);
+  const btn = document.getElementById(btnId);
+  const dropdown = document.getElementById(dropdownId);
+  const list = document.getElementById(listId);
   const searchInput = document.getElementById(searchId);
   if (!btn || !dropdown) return;
 
   const renderList = (query = "") => {
-    const q        = query.toLowerCase().trim();
+    const q = query.toLowerCase().trim();
     const filtered = q ? items.filter((i) => i[labelKey].toLowerCase().includes(q)) : items;
     list.innerHTML = `
       <li>
@@ -225,18 +270,22 @@ function initDropdown(config) {
           Semua ${labelKey === "nama_unit" ? "Unit Kerja" : "Provinsi"}
         </button>
       </li>
-      ${filtered.map((i) => `
+      ${filtered
+        .map(
+          (i) => `
         <li>
           <button type="button" class="dropdown-item" data-id="${i.id}" data-label="${i[labelKey]}">
             ${i[labelKey]}
           </button>
         </li>
-      `).join("")}
+      `,
+        )
+        .join("")}
       ${filtered.length === 0 ? '<li class="dropdown-empty">Tidak ada hasil</li>' : ""}
     `;
     list.querySelectorAll(".dropdown-item").forEach((item) => {
       item.addEventListener("click", () => {
-        const id    = item.dataset.id ? parseInt(item.dataset.id) : null;
+        const id = item.dataset.id ? parseInt(item.dataset.id) : null;
         const label = item.dataset.label;
         onSelect(id, label);
         dropdown.hidden = true;
@@ -290,17 +339,17 @@ async function cariAlumni(e) {
   // Boleh kosong — pencarian tetap jalan pakai filter unit/provinsi
 
   const hasilSection = document.getElementById("hasil-section");
-  const skeleton     = document.getElementById("skeleton");
-  const tabelHasil   = document.getElementById("tabel-hasil");
-  const notFound     = document.getElementById("not-found");
-  const hasilLabel   = document.getElementById("hasil-label");
-  const tabelBody    = document.getElementById("tabel-body");
+  const skeleton = document.getElementById("skeleton");
+  const tabelHasil = document.getElementById("tabel-hasil");
+  const notFound = document.getElementById("not-found");
+  const hasilLabel = document.getElementById("hasil-label");
+  const tabelBody = document.getElementById("tabel-body");
 
   // Tampilkan loading
   hasilSection.hidden = false;
-  skeleton.hidden     = false;
-  tabelHasil.hidden   = true;
-  notFound.hidden     = true;
+  skeleton.hidden = false;
+  tabelHasil.hidden = true;
+  notFound.hidden = true;
   hasilLabel.textContent = "Memuat data...";
   hasilSection.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -313,31 +362,34 @@ async function cariAlumni(e) {
 
     // Filter
     const results = ALUMNI_DB.filter((a) => {
-      const matchQ    = !q || a.nama.toLowerCase().includes(q) || a.nip.includes(q);
+      const matchQ = !q || a.nama.toLowerCase().includes(q) || a.nip.includes(q);
       const matchUnit = !selectedUnitKerja || a.unitKerja === selectedUnitKerja;
-      const matchProv = !selectedProvinsi  || a.provinsi  === selectedProvinsi;
+      const matchProv = !selectedProvinsi || a.provinsi === selectedProvinsi;
       return matchQ && matchUnit && matchProv;
     });
 
     if (results.length > 0) {
-      tabelBody.innerHTML = results.map((a) => `
+      tabelBody.innerHTML = results
+        .map(
+          (a) => `
         <tr>
-          <td class="mono" style="color:rgba(15,15,15,.7)">${a.nip || "-"}</td>
+          <td class="mono" style="color:#0F0F0F">${a.nip || "-"}</td>
           <td style="font-weight:600;color:#0F0F0F">${a.nama || "-"}</td>
-          <td style="color:rgba(15,15,15,.7)">${a.jabatan || "-"}</td>
-          <td style="color:rgba(15,15,15,.7)">${a.unitKerja || "-"}</td>
-          <td style="color:rgba(15,15,15,.7)">${a.provinsi || "-"}</td>
+          <td style="color:#0F0F0F">${a.jabatan || "-"}</td>
+          <td style="color:#0F0F0F">${a.unitKerja || "-"}</td>
+          <td style="color:#0F0F0F">${a.provinsi || "-"}</td>
         </tr>
-      `).join("");
+      `,
+        )
+        .join("");
       tabelHasil.hidden = false;
-      notFound.hidden   = true;
+      notFound.hidden = true;
       hasilLabel.textContent = `Hasil Pencarian (${results.length} ditemukan)`;
     } else {
       tabelHasil.hidden = true;
-      notFound.hidden   = false;
+      notFound.hidden = false;
       hasilLabel.textContent = "Tidak Ditemukan";
     }
-
   } catch (err) {
     skeleton.hidden = true;
     notFound.hidden = false;
@@ -349,16 +401,16 @@ async function cariAlumni(e) {
 function resetSearch() {
   document.getElementById("q").value = "";
   selectedUnitKerja = "";
-  selectedProvinsi  = "";
+  selectedProvinsi = "";
 
   const ukLabel = document.getElementById("unit-kerja-label");
-  const pLabel  = document.getElementById("provinsi-label");
-  const ukId    = document.getElementById("unit-kerja-id");
-  const pId     = document.getElementById("provinsi-id");
+  const pLabel = document.getElementById("provinsi-label");
+  const ukId = document.getElementById("unit-kerja-id");
+  const pId = document.getElementById("provinsi-id");
   if (ukLabel) ukLabel.textContent = "Semua Unit Kerja";
-  if (pLabel)  pLabel.textContent  = "Semua";
-  if (ukId)    ukId.value          = "";
-  if (pId)     pId.value           = "";
+  if (pLabel) pLabel.textContent = "Semua";
+  if (ukId) ukId.value = "";
+  if (pId) pId.value = "";
 
   const hasilSection = document.getElementById("hasil-section");
   if (hasilSection) hasilSection.hidden = true;
