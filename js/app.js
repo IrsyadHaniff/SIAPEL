@@ -77,6 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           selectedUnitKerja = label;
           document.getElementById("unit-kerja-label").textContent = label || "Semua Unit Kerja";
           document.getElementById("unit-kerja-id").value = label;
+          triggerSearch();
         },
       });
 
@@ -92,6 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           selectedProvinsi = label;
           document.getElementById("provinsi-label").textContent = label || "Semua";
           document.getElementById("provinsi-id").value = label;
+          triggerSearch();
         },
       });
     }
@@ -332,6 +334,12 @@ document.addEventListener("click", closeAllDropdowns);
 // ================================================================
 //  ALUMNI SEARCH
 // ================================================================
+// trigger pencarian tanpa perlu event (dipanggil dari dropdown)
+function triggerSearch() {
+  const fakeEvent = { preventDefault: () => {} };
+  cariAlumni(fakeEvent);
+}
+
 async function cariAlumni(e) {
   e.preventDefault();
   const q = document.getElementById("q").value.trim().toLowerCase();
