@@ -10,7 +10,7 @@ const CACHE_KEY  = "siapel_cache";
 const CACHE_TTL  = 5 * 60 * 1000; // 5 menit (ms)
 
 /* ────────────────────────────────────────────────
-   Cache sederhana via sessionStorage
+   Cache via sessionStorage
    ──────────────────────────────────────────────── */
 function cacheGet() {
   try {

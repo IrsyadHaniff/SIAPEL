@@ -47,7 +47,7 @@ const PROVINSI = [
 ];
 
 // ================================================================
-//  INIT – fetch data dari Apps Script lalu bangun UI
+//  INIT – fetch data dari Apps Script
 // ================================================================
 document.addEventListener("DOMContentLoaded", async () => {
   initNavbar();
@@ -344,7 +344,7 @@ async function cariAlumni(e) {
   e.preventDefault();
   const q = document.getElementById("q").value.trim().toLowerCase();
 
-  // Boleh kosong — pencarian tetap jalan pakai filter unit/provinsi
+  //  pencarian tetap jalan pakai filter unit/provinsi
 
   const hasilSection = document.getElementById("hasil-section");
   const skeleton = document.getElementById("skeleton");
